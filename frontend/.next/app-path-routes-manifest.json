@@ -3,13 +3,13 @@
   "/favicon.ico/route": "/favicon.ico",
   "/founder-dashboard/page": "/founder-dashboard",
   "/investor-dashboard/page": "/investor-dashboard",
-  "/notifications/page": "/notifications",
   "/messages/page": "/messages",
   "/news/page": "/news",
-  "/pricing/page": "/pricing",
+  "/notifications/page": "/notifications",
   "/page": "/",
-  "/signup/page": "/signup",
+  "/pricing/page": "/pricing",
   "/profile-settings/page": "/profile-settings",
+  "/signup/page": "/signup",
   "/signin/page": "/signin",
   "/startups/startups/page": "/startups/startups"
 }
