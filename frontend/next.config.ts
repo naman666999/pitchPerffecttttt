@@ -1,15 +1,9 @@
-
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  output: 'export',        // Enables static export (replaces `next export`)
   images: {
+    unoptimized: true,     // Netlify & static hosts don’t support Next/Image optimization
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,11 +16,17 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
-      }
+      },
     ],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
-    // allowedDevOrigins was here, removed as it's unrecognized.
+    // No unrecognized flags here to avoid deploy errors
   },
 };
 
