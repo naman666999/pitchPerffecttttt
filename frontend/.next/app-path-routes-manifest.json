@@ -1,0 +1,15 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/founder-dashboard/page": "/founder-dashboard",
+  "/investor-dashboard/page": "/investor-dashboard",
+  "/notifications/page": "/notifications",
+  "/messages/page": "/messages",
+  "/news/page": "/news",
+  "/pricing/page": "/pricing",
+  "/page": "/",
+  "/signup/page": "/signup",
+  "/profile-settings/page": "/profile-settings",
+  "/signin/page": "/signin",
+  "/startups/startups/page": "/startups/startups"
+}
