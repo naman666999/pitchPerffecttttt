@@ -9,7 +9,10 @@ dotenv.config();
 const app = express();
 
 
-app.use(cors(https://pitchperfecct.netlify.app/));
+app.use(cors({
+  origin: "https://pitchperfecct.netlify.app/"
+})); // Correct
+
 app.use(express.json());
 
 
