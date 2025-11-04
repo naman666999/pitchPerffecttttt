@@ -1,37 +1,35 @@
-import express from "express";
-import StartupProfile from "../models/StartupProfile.js";
+import mongoose from "mongoose";
 
-const router = express.Router();
+const startupProfileSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    startupLogo: {
+      type: String,
+      default: null,
+    },
+    startupName: {
+      type: String,
+      required: true,
+    },
+    industry: {
+      type: String,
+      required: true,
+    },
+    currentStage: {
+      type: String,
+      required: true,
+    },
+    pitchSummary: {
+      type: String,
+      maxlength: 500,
+      default: null,
+    },
+  },
+  { timestamps: true }
+);
 
-// Create or update startup profile for a user (upsert)
-router.post("/", async (req, res) => {
-  try {
-    const { user, startupLogo, startupName, industry, currentStage, pitchSummary } = req.body;
-    if (!user || !startupName || !industry || !currentStage) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
-    // Create or update for that user (by user field)
-    const profile = await StartupProfile.findOneAndUpdate(
-      { user },
-      { startupLogo, startupName, industry, currentStage, pitchSummary, user },
-      { new: true, upsert: true }
-    );
-    res.status(201).json({ profile });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// Get the startup profile for a user
-router.get("/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const profile = await StartupProfile.findOne({ user: userId });
-    if (!profile) return res.status(404).json({ message: "Profile not found" });
-    res.json({ profile });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-export default router;
+export default mongoose.model("StartupProfile", startupProfileSchema);
