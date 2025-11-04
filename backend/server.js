@@ -16,7 +16,7 @@ app.use(express.json());
 
 
 app.use("/", authRoutes);
-app.use("/api/startup-profile", startupProfileRoutes);
+app.use("/", startupProfileRoutes);
 
 const PORT = process.env.PORT || 5000;
 mongoose
