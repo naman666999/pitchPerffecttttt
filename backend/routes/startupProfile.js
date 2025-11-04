@@ -4,7 +4,7 @@ import StartupProfile from "../models/StartupProfile.js";
 const router = express.Router();
 
 // Create or update startup profile for a user (upsert)
-router.post("/", async (req, res) => {
+router.post("/profile-settings", async (req, res) => {
   try {
     const { user, startupLogo, startupName, industry, currentStage, pitchSummary } = req.body;
     if (!user || !startupName || !industry || !currentStage) {
