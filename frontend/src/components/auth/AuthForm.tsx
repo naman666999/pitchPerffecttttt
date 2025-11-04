@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -41,7 +40,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialRole = searchParams.get('role') as 'founder' | 'investor' | null;
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'founder' | 'investor' | undefined>(initialRole || user?.role || undefined);
@@ -58,19 +57,48 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
 
     if (mode === 'signup') {
-      const signupValues = values as SignUpFormValues;
-      login({ id: Date.now().toString(), email: signupValues.email, role: signupValues.role, name: signupValues.name });
-      toast({ title: "Account Created!", description: "Welcome to PitchPerfect." });
-      router.push(signupValues.role === 'founder' ? '/founder-dashboard' : '/investor-dashboard');
-    } else {
+      try {
+        const signupValues = values as SignUpFormValues;
+        const response = await fetch('https://pitchperffecttttt.onrender.com/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(signupValues),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          login({ id: data.user.id, email: data.user.email, role: data.user.role, name: data.user.name });
+          toast({ title: "Account Created!", description: "Welcome to PitchPerfect." });
+          router.push(data.user.role === 'founder' ? '/founder-dashboard' : '/investor-dashboard');
+        } else {
+          toast({ title: "Sign Up Failed", description: data.message || "Could not create account.", variant: "destructive" });
+        }
+      } catch (error) {
+        toast({ title: "Server Error", description: "Could not sign up. Try again later.", variant: "destructive" });
+      }
+      setIsLoading(false);
+      return;
+    }
+
+    // Sign in with backend
+    try {
       const signinValues = values as SignInFormValues;
-      const userRoleToLogin = user?.role || 'founder'; // Use existing role if available, else default
-      login({ id: Date.now().toString(), email: signinValues.email, role: userRoleToLogin });
-      toast({ title: "Signed In!", description: "Welcome back to PitchPerfect." });
-      router.push(userRoleToLogin === 'founder' ? '/founder-dashboard' : '/investor-dashboard');
+      const response = await fetch('https://pitchperffecttttt.onrender.com/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signinValues)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        login({ id: data.user.id, email: data.user.email, role: data.user.role, name: data.user.name });
+        toast({ title: "Signed In!", description: "Welcome back to PitchPerfect." });
+        router.push(data.user.role === 'founder' ? '/founder-dashboard' : '/investor-dashboard');
+      } else {
+        toast({ title: "Sign In Failed", description: data.message || "Please check your credentials.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Server Error", description: "Could not sign in. Try again later.", variant: "destructive" });
     }
     setIsLoading(false);
   };
@@ -78,7 +106,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const handleGoogleSignIn = async () => {
     setIsLoadingGoogle(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
-    const roleToLogin = selectedRole || (mode === 'signup' ? 'founder' : (user?.role || 'founder')); 
+    const roleToLogin = selectedRole || (mode === 'signup' ? 'founder' : (user?.role || 'founder'));
     login({ id: 'google-user', email: 'user@google.com', role: roleToLogin, name: 'Google User' });
     toast({ title: "Signed In with Google!", description: "Welcome to PitchPerfect." });
     router.push(roleToLogin === 'founder' ? '/founder-dashboard' : '/investor-dashboard');
@@ -87,12 +115,11 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   React.useEffect(() => {
     if (mode === 'signup' && initialRole) {
-      form.setValue('role' as any, initialRole); 
+      form.setValue('role' as any, initialRole);
       setSelectedRole(initialRole);
       setContextUserRole(initialRole);
     }
   }, [mode, initialRole, form, setContextUserRole]);
-
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-15rem)] py-12">
@@ -109,7 +136,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           {/* Social Logins First */}
           <div className="space-y-4 mb-6">
             <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isLoading || isLoadingGoogle}>
-              {isLoadingGoogle ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 
+              {isLoadingGoogle ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> :
                 <Image src="https://placehold.co/20x20.png?text=G" alt="Google" width={20} height={20} className="mr-2" data-ai-hint="google logo" />
               }
               {mode === 'signup' ? 'Sign Up with Google' : 'Sign In with Google'}
@@ -131,7 +158,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {mode === 'signup' && (
                 <>
-                 <FormField
+                  <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
