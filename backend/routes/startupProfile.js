@@ -23,7 +23,7 @@ router.post("/profile-settings", async (req, res) => {
 });
 
 // Get the startup profile for a user
-router.get("/:userId", async (req, res) => {
+router.get("/profile-settings/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const profile = await StartupProfile.findOne({ user: userId });
