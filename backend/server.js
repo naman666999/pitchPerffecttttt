@@ -10,7 +10,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: "https://pitchperfecct.netlify.app/"
+  origin: "http://localhost:9002"
 })); // Correct
 
 app.use(express.json());
